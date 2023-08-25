@@ -458,25 +458,61 @@ Modifications were only applied on those files:
 
 <p align="center">
   <img alt="lumapps-docs" src="https://github-production-user-asset-6210df.s3.amazonaws.com/63856951/263220400-f5eff7af-28a5-4ab4-8254-7545bbd4c70c.png">
-</p>     
+</p>
 
 
 
 
 ## Development Setup
 
-We added the pass-through to this component and therefore some LumApps values are now needed to test.
+We added the pass-through to this component and therefore some LumApps values are now needed to test it.
 You will find the lines to uncomment in the `show()` method inside `src/lib/Preview.js`. There you will find an import
-to a `LUMAPPS_TestFiles.js` file that you will need to fill with LumApps base URL, token, HaussmannCell, organization ID
-and the connector ID.
+to a `LUMAPPS_TestFiles.js` file that you will need to fill with your:
+- Base URL
+- Token
+- HaussmannCell
+- Organization ID
+- Connector ID
+
+To launch the component on `http://localhost:8000` :
+
+```
+    yarn && yarn start:dev
+```
+
+You will still need to add Box token and the file ID inside the localhost page, other option is to pass a valid file object.
+
+## Deployment
+
+To build the component:
+```
+    yarn build:i18n && yarn build:prod
+```
+
+ https://console.cloud.google.com/storage/browser/partners-frontend-static-assets/external_sdks/box <br>
+ To deploy, you will need to go there and add your version folder , without overwriting previous one and modifying the<br>
+ URLs in the LumApps Widget constants:
+ ```
+ /lumapps/int-lumapps-marketplace/box_file_preview/src/utils/constants.ts
+ ```
 
 
 
 
+## Unfinished parts
+
+- Annotations are disabled, component is located in another Box repository, already forked in our `lumapps-marketplace`
+GitHub organization here https://github.com/lumapps-marketplace/box-annotations. Same process to add the pass-through
+will be needed to be done.
+- Some types are a not valid, and would need some work on.
 
 
+<br>
+<br>
+<br>
+<br>
 <a href="https://docs.lumapps.com/docs/explore-l5565890040506241box-widgets/explore-l8798272557386894box-widgets">
      <p align="center">
           <img alt="lumapps-docs" src="https://user-images.githubusercontent.com/63856951/147965056-2645f311-a9d7-4c3b-b977-39df845238d8.png">
-     </p>     
+     </p>
 </a>
