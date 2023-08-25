@@ -21,7 +21,7 @@ const filterOptions = (options: AxiosRequestConfig = {}): AxiosRequestConfig => 
     return pickBy(options, (value: keyof AxiosRequestConfig) => value !== undefined && value !== null);
 };
 
-const handleError = ({ response }: AxiosError): void => {
+const handleError = (response: AxiosError): void => {
     // eslint-disable-next-line no-console
     console.log('ERROR RESPONSE', response);
     if (response) {
@@ -109,14 +109,23 @@ export default class Api {
         //     .catch(handleError);
 
         const { method, data, LumAppsContext, connectorId } = options;
+
+        let transformResponse;
+
+        if (options.responseType === 'text') transformResponse = transformTextResponse;
+
+        const axiosConfig = filterOptions({ transformResponse, ...options });
+
         const passThroughData: PassThroughData = {
             method: method.toUpperCase(),
             url,
+            headers: axiosConfig.headers,
         };
+
         if (data) passThroughData.body = data as object;
 
         return lumappsPassThrough(LumAppsContext as LumAppsContext, connectorId as string, passThroughData)
-            .then(parseResponse, () => console.log(passThroughData.url))
+            .then(parseResponse)
             .catch(handleError);
     }
 }
