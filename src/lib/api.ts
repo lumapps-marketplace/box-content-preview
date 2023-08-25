@@ -10,8 +10,14 @@ import axios, {
 import pickBy from 'lodash/pickBy';
 import DownloadReachability from './DownloadReachability';
 import MetadataAPI from './metadataAPI';
+import lumappsPassThrough from './LUMAPPS_PassThrough';
+import { LumAppsContext, PassThroughData } from './LUMAPPS_types';
 
-export type APIGetConfig = { type?: ResponseType } & AxiosRequestConfig;
+export type APIGetConfig = {
+    type?: ResponseType;
+    connectorId?: string;
+    LumAppsContext?: LumAppsContext;
+} & AxiosRequestConfig;
 export type APIError = { response: AxiosResponse } & Error;
 export type APIPromise = Promise<AxiosPromise | SyntaxError>;
 
@@ -19,9 +25,10 @@ const filterOptions = (options: AxiosRequestConfig = {}): AxiosRequestConfig => 
     return pickBy(options, (value: keyof AxiosRequestConfig) => value !== undefined && value !== null);
 };
 
-const handleError = ({ response }: AxiosError): void => {
+const handleError = (response: AxiosError): void => {
     if (response) {
-        const error = new Error(response.statusText) as APIError;
+        const error = new Error(response.response?.statusText) as APIError;
+        // @ts-ignore
         error.response = response; // Need to pass response through so we can see what kind of HTTP error this was
         throw error;
     }
@@ -90,14 +97,24 @@ export default class Api {
         return this.xhr(url, { method: 'put', data, ...options });
     }
 
-    xhr(url: string, options: AxiosRequestConfig = {}): AxiosPromise {
+    xhr(url: string, options: any): AxiosPromise {
+        const { method, data, LumAppsContext, connectorId } = options;
+
         let transformResponse;
 
-        if (options.responseType === 'text') {
-            transformResponse = transformTextResponse;
-        }
+        if (options.responseType === 'text') transformResponse = transformTextResponse;
 
-        return this.client(url, filterOptions({ transformResponse, ...options }))
+        const axiosConfig = filterOptions({ transformResponse, ...options });
+
+        const passThroughData: PassThroughData = {
+            method: method.toUpperCase(),
+            url,
+            headers: axiosConfig.headers,
+        };
+
+        if (data) passThroughData.body = data as object;
+
+        return lumappsPassThrough(LumAppsContext as LumAppsContext, connectorId as string, passThroughData)
             .then(parseResponse)
             .catch(handleError);
     }

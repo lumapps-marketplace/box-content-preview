@@ -228,6 +228,12 @@ class Preview extends EventEmitter {
      * @return {void}
      */
     show(fileIdOrFile, token, options = {}) {
+        // LUMAPPS TEST
+        // import { connectorTest, contextTest } from './LUMAPPS_TestFiles';
+        // options.LumAppsContext = contextTest;
+        // options.connectorId = connectorTest;
+        // fileIdOrFile = danny;
+
         // Save a reference to the options to be re-used later.
         // Token should either be a function or a string.
         // Token can also be null or undefined for offline use case.
@@ -538,7 +544,7 @@ class Preview extends EventEmitter {
         }
 
         // Make sure to append any optional query params to requests
-        const { apiHost, queryParams } = this.options;
+        const { apiHost, queryParams, LumAppsContext, connectorId } = this.options;
 
         // If we should download the watermarked representation of the file, generate the representation URL, force
         // the correct content disposition, and download
@@ -562,7 +568,7 @@ class Preview extends EventEmitter {
         } else {
             const getDownloadUrl = appendQueryParams(getDownloadURL(this.file.id, apiHost), queryParams);
             this.api
-                .get(getDownloadUrl, { headers: this.getRequestHeaders() })
+                .get(getDownloadUrl, { headers: this.getRequestHeaders(), LumAppsContext, connectorId })
                 .then(data => {
                     const downloadUrl = appendQueryParams(data.download_url, queryParams);
                     this.api.reachability.downloadWithReachabilityCheck(downloadUrl);
@@ -750,12 +756,17 @@ class Preview extends EventEmitter {
 
             this.file = getCachedFile(this.cache, cacheKey) || bareFile;
 
+            console.log('has a file ID and/or file version ID -> this.file = cache', this.file);
+
             // Use well-formed file object if available
         } else if (checkFileValid(fileIdOrFile)) {
             this.file = fileIdOrFile;
-
+            // eslint-disable-next-line no-console
+            console.log('well-formed file object', fileIdOrFile);
             // File is not a well-formed file object but has a file ID and/or file version ID (e.g. Content Explorer)
         } else if (fileIdOrFile && typeof fileIdOrFile.id === 'string') {
+            // eslint-disable-next-line no-console
+            console.log('File is not a well-formed file object but has a file ID and/or file version ID', fileIdOrFile);
             /* eslint-disable camelcase */
             const { id, file_version } = fileIdOrFile;
 
@@ -767,6 +778,7 @@ class Preview extends EventEmitter {
             }
             /* eslint-enable camelcase */
         } else {
+            // eslint-disable-next-line no-console
             throw new PreviewError(
                 ERROR_CODE.BAD_INPUT,
                 __('error_generic'),
@@ -891,6 +903,12 @@ class Preview extends EventEmitter {
 
         // Reset all options
         this.options = {};
+
+        // LumApps Connector ID
+        this.options.connectorId = options.connectorId;
+
+        // LumAppsContext
+        this.options.LumAppsContext = options.LumAppsContext;
 
         // Container for preview
         this.options.container = options.container;
@@ -1067,7 +1085,7 @@ class Preview extends EventEmitter {
      * @return {void}
      */
     loadFromServer() {
-        const { apiHost, previewWMPref, queryParams } = this.options;
+        const { apiHost, previewWMPref, queryParams, LumAppsContext, connectorId } = this.options;
         const params = {
             watermark_preference: convertWatermarkPref(previewWMPref),
             ...queryParams,
@@ -1080,7 +1098,7 @@ class Preview extends EventEmitter {
 
         const fileInfoUrl = appendQueryParams(getURL(this.file.id, fileVersionId, apiHost), params);
         this.api
-            .get(fileInfoUrl, { headers: this.getRequestHeaders() })
+            .get(fileInfoUrl, { headers: this.getRequestHeaders(), LumAppsContext, connectorId })
             .then(this.handleFileInfoResponse)
             .catch(this.handleFetchError);
     }
@@ -1415,7 +1433,7 @@ class Preview extends EventEmitter {
     logPreviewEvent(fileId, options) {
         this.logRetryCount = this.logRetryCount || 0;
 
-        const { apiHost, token, sharedLink, sharedLinkPassword } = options;
+        const { apiHost, token, sharedLink, sharedLinkPassword, LumAppsContext, connectorId } = options;
         const data = {
             event_type: 'preview',
             source: {
@@ -1437,7 +1455,7 @@ class Preview extends EventEmitter {
         }
 
         this.api
-            .post(`${apiHost}/2.0/events`, data, { headers })
+            .post(`${apiHost}/2.0/events`, data, { LumAppsContext, connectorId, headers })
             .then(() => {
                 this.pageTrackerReporter(true);
                 // Reset retry count after successfully logging
@@ -1708,7 +1726,7 @@ class Preview extends EventEmitter {
      * @return {void}
      */
     prefetchNextFiles() {
-        const { apiHost, previewWMPref, queryParams, skipServerUpdate } = this.options;
+        const { apiHost, previewWMPref, queryParams, skipServerUpdate, LumAppsContext, connectorId } = this.options;
         const params = {
             watermark_preference: convertWatermarkPref(previewWMPref),
             ...queryParams,
@@ -1745,7 +1763,7 @@ class Preview extends EventEmitter {
 
                     // Prefetch and cache file information and content
                     this.api
-                        .get(fileInfoUrl, { headers: this.getRequestHeaders(token) })
+                        .get(fileInfoUrl, { headers: this.getRequestHeaders(token), LumAppsContext, connectorId })
                         .then(file => {
                             // Cache file info
                             cacheFile(this.cache, file);

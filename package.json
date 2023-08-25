@@ -144,14 +144,10 @@
         "last 2 iOS versions",
         "IE 11"
     ],
-    "husky": {
-        "hooks": {
-            "commit-msg": "commitlint -e",
-            "pre-commit": "lint-staged",
-            "pre-push": "./build/prepush.sh"
-        }
-    },
     "resolutions": {
         "mojito-rb-gen/merge": "1.2.1"
+    },
+    "volta": {
+        "node": "14.21.3"
     }
 }
