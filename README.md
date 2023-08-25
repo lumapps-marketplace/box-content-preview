@@ -434,3 +434,13 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
+
+
+# Lumapps
+
+## Development Setup
+
+We added the pass-through to this component and therefore some LumApps values are now needed to test.
+You will find the lines to uncomment in the `show()` method inside `src/lib/Preview.js`. There you will find an import
+to a `LUMAPPS_TestFiles.js` file that you will need to fill with LumApps base URL, token, HaussmannCell, organization ID
+and the connector ID.
