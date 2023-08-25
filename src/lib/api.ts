@@ -26,17 +26,14 @@ const filterOptions = (options: AxiosRequestConfig = {}): AxiosRequestConfig => 
 };
 
 const handleError = (response: AxiosError): void => {
-    // eslint-disable-next-line no-console
-    console.log('ERROR RESPONSE', response);
     if (response) {
-        const error = new Error(response.statusText) as APIError;
+        const error = new Error(response.response?.statusText) as APIError;
+        // @ts-ignore
         error.response = response; // Need to pass response through so we can see what kind of HTTP error this was
         throw error;
     }
 };
 const parseResponse = (response: AxiosResponse): AxiosResponse | AxiosResponse['data'] => {
-    // eslint-disable-next-line no-console
-    console.log('RESPONSE', response);
     if (response.status === 204 || response.status === 202) {
         return response;
     }
@@ -101,17 +98,6 @@ export default class Api {
     }
 
     xhr(url: string, options: any): AxiosPromise {
-        // ORIGINAL CODE
-        //
-        // let transformResponse;
-        //
-        // if (options.responseType === 'text') {
-        //     transformResponse = transformTextResponse;
-        // }
-        // return this.client(url, filterOptions({ transformResponse, ...options }))
-        //     .then(parseResponse)
-        //     .catch(handleError);
-
         const { method, data, LumAppsContext, connectorId } = options;
 
         let transformResponse;

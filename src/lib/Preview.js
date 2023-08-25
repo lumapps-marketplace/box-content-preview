@@ -849,7 +849,7 @@ class Preview extends EventEmitter {
         if (!(this.ui.isSetup() && this.retryCount > 0)) {
             this.setupUI();
         }
-        // TODO check if file is valid
+
         // Load from cache if the current file is valid, otherwise load file info from server
         if (checkFileValid(this.file)) {
             // Save file in cache. This also adds the 'ORIGINAL' representation. It is required to preview files offline
