@@ -13,7 +13,11 @@ import MetadataAPI from './metadataAPI';
 import lumappsPassThrough from './LUMAPPS_PassThrough';
 import { LumAppsContext, PassThroughData } from './LUMAPPS_types';
 
-export type APIGetConfig = { type?: ResponseType } & AxiosRequestConfig;
+export type APIGetConfig = {
+    type?: ResponseType;
+    connectorId?: string;
+    LumAppsContext?: LumAppsContext;
+} & AxiosRequestConfig;
 export type APIError = { response: AxiosResponse } & Error;
 export type APIPromise = Promise<AxiosPromise | SyntaxError>;
 
