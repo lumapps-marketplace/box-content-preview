@@ -8,7 +8,7 @@ export interface LumAppsContext {
 }
 
 export interface PassThroughData {
-    method: 'GET' | 'POST' | 'PUT' | 'DELETE';
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'HEAD';
     url: string;
     body?: object;
     params?: object;
