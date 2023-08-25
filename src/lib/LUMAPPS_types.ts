@@ -12,4 +12,5 @@ export interface PassThroughData {
     url: string;
     body?: object;
     params?: object;
+    headers?: object;
 }
