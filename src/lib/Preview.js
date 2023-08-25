@@ -1096,7 +1096,6 @@ class Preview extends EventEmitter {
         const tag = Timer.createTag(this.file.id, LOAD_METRIC.fileInfoTime);
         Timer.start(tag);
 
-        // eslint-disable-next-line no-unused-vars
         const fileInfoUrl = appendQueryParams(getURL(this.file.id, fileVersionId, apiHost), params);
         this.api
             .get(fileInfoUrl, { headers: this.getRequestHeaders(), LumAppsContext, connectorId })
@@ -1727,7 +1726,7 @@ class Preview extends EventEmitter {
      * @return {void}
      */
     prefetchNextFiles() {
-        const { apiHost, previewWMPref, queryParams, skipServerUpdate } = this.options;
+        const { apiHost, previewWMPref, queryParams, skipServerUpdate, LumAppsContext, connectorId } = this.options;
         const params = {
             watermark_preference: convertWatermarkPref(previewWMPref),
             ...queryParams,
@@ -1764,7 +1763,7 @@ class Preview extends EventEmitter {
 
                     // Prefetch and cache file information and content
                     this.api
-                        .get(fileInfoUrl, { headers: this.getRequestHeaders(token) })
+                        .get(fileInfoUrl, { headers: this.getRequestHeaders(token), LumAppsContext, connectorId })
                         .then(file => {
                             // Cache file info
                             cacheFile(this.cache, file);
