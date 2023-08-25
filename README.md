@@ -435,8 +435,33 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
 
-# Lumapps
+![logo-H-color](https://github.com/lumapps-marketplace/box-content-preview/assets/63856951/6dfe2328-f213-4b24-82af-c0a154de32fb)
+
+
+<br>
+<br>
+<br>
+<br>
+
+# Pass-Through Implementation
+
+Modifications were only applied on those files:
+<br>
+
+
+<p align="center">
+  <img alt="lumapps-docs" src="https://github-production-user-asset-6210df.s3.amazonaws.com/63856951/263220400-f5eff7af-28a5-4ab4-8254-7545bbd4c70c.png">
+</p>     
+
+
+
 
 ## Development Setup
 
@@ -444,3 +469,14 @@ We added the pass-through to this component and therefore some LumApps values ar
 You will find the lines to uncomment in the `show()` method inside `src/lib/Preview.js`. There you will find an import
 to a `LUMAPPS_TestFiles.js` file that you will need to fill with LumApps base URL, token, HaussmannCell, organization ID
 and the connector ID.
+
+
+
+
+
+
+<a href="https://docs.lumapps.com/docs/explore-l5565890040506241box-widgets/explore-l8798272557386894box-widgets">
+     <p align="center">
+          <img alt="lumapps-docs" src="https://user-images.githubusercontent.com/63856951/147965056-2645f311-a9d7-4c3b-b977-39df845238d8.png">
+     </p>     
+</a>
